@@ -34,26 +34,44 @@ namespace Ampasamp
             return result;
         }
 
-        static string SanitizeIdentifier(string s)
+        /// <summary>
+        /// Sanitizes an identifier for Coq.
+        /// </summary>
+        /// <param name="str">The identifier to sanitize.</param>
+        /// <returns></returns>
+        static string SanitizeIdentifier(string str)
         {
-            string ou = "";
-            foreach (var c in s)
+            string output = "";
+            foreach (var chr in str)
             {
-                if (Char.IsLetterOrDigit(c))
+                if (Char.IsLetterOrDigit(chr))
                 {
-                    ou += Char.ToLower(c);
+                    output += chr;
                 }
-                else if (c == ' ' || c == '_')
+                else if (chr == ' ' || chr == '_')
                 {
-                    ou += "_";
+                    output += "_";
                 }
             }
-            return ou;
+            return output;
+        }
+
+        /// <summary>
+        /// Computes a suitable dictionary name from a task and policy.
+        /// </summary>
+        /// <param name="task">The task to use.</param>
+        /// <param name="policy">The policy to use.</param>
+        /// <returns></returns>
+        static string ComputeName(Task task, Policy policy)
+        {
+            return SanitizeIdentifier($"{task.Name}_{policy.Name}_{task.Sample}");
         }
 
         /// <summary>
         /// Serializes a collection of strings into one string.
         /// </summary>
+        /// <param name="task">The currently executing task (used for dictionary name generation).</param>
+        /// <param name="policy">The current policy (used for dictionary name generation).</param>
         /// <param name="arr">The string collection to serialize.</param>
         /// <param name="json">Whether or not to return the result as JSON.</param>
         /// <returns></returns>
@@ -62,14 +80,34 @@ namespace Ampasamp
             switch (format)
             {
                 case "coq":
-                    var output = Properties.Resources.coq_template;
-                    output = output.Replace("%NAME", SanitizeIdentifier(task.Name + "_" + policy.Name));
-                    output = output.Replace("%PASSWORDS", "\"" + String.Join("\";" + Environment.NewLine + "  \"", arr) + "\"");
-                    return output;
+                    // Serialize into Coq template.
+                    return Properties.Resources.coq_template 
+                        .Replace("%NAME", ComputeName(task, policy))
+                        .Replace("%PASSWORDS", $"\"{String.Join($"\";{Environment.NewLine}  \"", arr)}\"");
                 case "json":
-                    return JsonConvert.SerializeObject(arr);
+                    // Serialize as JSON.
+                    return JsonConvert.SerializeObject(arr); 
                 default:
-                    return String.Join(Environment.NewLine, arr); // Plain is default.
+                    // Plain is default.
+                    return String.Join(Environment.NewLine, arr); 
+            }
+        }
+
+        /// <summary>
+        /// Gets the file extension for a specific output format.
+        /// </summary>
+        /// <param name="format">The output format string to get the extension for.</param>
+        /// <returns></returns>
+        static string GetExtension(string format)
+        {
+            switch (format)
+            {
+                case "coq":
+                    return "v";
+                case "json":
+                    return "json";
+                default:
+                    return "txt";
             }
         }
 
@@ -130,16 +168,19 @@ namespace Ampasamp
                 var filtered = passwords.Where(x => Complies(x, policy));
                 if (filtered.Count() < task.Sample)
                 {
-                    Console.WriteLine("Not enough compliant passwords in this database to sample " + task.Sample + " so sampling as much as possible (" + filtered.Count() + ")...");
+                    Console.WriteLine($"Not enough compliant passwords in this database to sample {task.Sample}"
+                        + $" so sampling as much as possible ({filtered.Count()})...");
                 }
 
                 // Output compliant passwords to file.
-                File.WriteAllText(policy.Name + ".txt", Serialize(task, policy, filtered.Take(task.Sample), task.Output));
+                File.WriteAllText($"{ComputeName(task, policy)}.{GetExtension(task.Output)}", 
+                    Serialize(task, policy, filtered.Take(task.Sample), task.Output));
             }
         }
 
         static void Main(string[] args)
         {
+            // Parse arguments.
             var sampleOptions = new SampleOptions();
             if (CommandLine.Parser.Default.ParseArguments(args, sampleOptions))
             {
