@@ -16,9 +16,19 @@
         public int Sample { get; set; }
 
         /// <summary>
-        /// Gets or sets whether or not to output dictionaries as JSON arrays.
+        /// Gets or sets the format to use in output dictionaries.
         /// </summary>
-        public bool OutputJson { get; set; }
+        public string Output { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether or not to remove passwords containing non-ASCII characters.
+        /// </summary>
+        public bool CullNonAscii { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether or not to remove passwords containing non-printable ASCII characters.
+        /// </summary>
+        public bool CullNonPrintable { get; set; }
 
         /// <summary>
         /// The set of policies to be used to sample data for this task.

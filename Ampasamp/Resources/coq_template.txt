@@ -1,0 +1,11 @@
+Require Import Coq.Strings.String.
+Require Import Coq.Lists.List.
+Require Import Coq.Lists.ListSet.
+
+Import ListNotations.
+
+Open Scope string_scope.
+
+Definition %NAME : set string := [
+  %PASSWORDS
+].

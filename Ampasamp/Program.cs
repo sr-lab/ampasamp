@@ -33,30 +33,93 @@ namespace Ampasamp
 
             return result;
         }
-        
+
+        static string SanitizeIdentifier(string s)
+        {
+            string ou = "";
+            foreach (var c in s)
+            {
+                if (Char.IsLetterOrDigit(c))
+                {
+                    ou += Char.ToLower(c);
+                }
+                else if (c == ' ' || c == '_')
+                {
+                    ou += "_";
+                }
+            }
+            return ou;
+        }
+
         /// <summary>
         /// Serializes a collection of strings into one string.
         /// </summary>
         /// <param name="arr">The string collection to serialize.</param>
         /// <param name="json">Whether or not to return the result as JSON.</param>
         /// <returns></returns>
-        static string Serialize(IEnumerable<string> arr, bool json)
+        static string Serialize(Task task, Policy policy, IEnumerable<string> arr, string format)
         {
-            return json ? JsonConvert.SerializeObject(arr) : String.Join(Environment.NewLine, arr);
+            switch (format)
+            {
+                case "coq":
+                    var output = Properties.Resources.coq_template;
+                    output = output.Replace("%NAME", SanitizeIdentifier(task.Name + "_" + policy.Name));
+                    output = output.Replace("%PASSWORDS", "\"" + String.Join("\";" + Environment.NewLine + "  \"", arr) + "\"");
+                    return output;
+                case "json":
+                    return JsonConvert.SerializeObject(arr);
+                default:
+                    return String.Join(Environment.NewLine, arr); // Plain is default.
+            }
         }
 
-        static void Main(string[] args)
+        /// <summary>
+        /// Executes a task file against a database.
+        /// </summary>
+        /// <param name="databaseFilename">The path of the database to execute against.</param>
+        /// <param name="taskFilename">The task file to execute.</param>
+        static void Sample(string databaseFilename, string taskFilename)
         {
+            // Check files.
+            if (!File.Exists(databaseFilename))
+            {
+                Console.WriteLine($"Error: database file '{taskFilename}' does not exist.");
+                return;
+            }
+            if (!File.Exists(taskFilename))
+            {
+                Console.WriteLine($"Error: task file '{taskFilename}' does not exist.");
+                return;
+            }
+
+            // Read in task.
+            var task = JsonConvert.DeserializeObject<Task>(File.ReadAllText(taskFilename));
+            Console.WriteLine("Executing task: " + task.Name);
+
             // Read, parse, randomize full password database.
             var rnd = new Random();
-            var passwords = File.ReadAllText("pass_db.txt")
+            var passwords = File.ReadAllText(databaseFilename)
                 .Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None)
                 .Select(x => x.Trim())
                 .OrderBy(x => rnd.Next()).ToArray();
 
-            // Read in task.
-            var task = JsonConvert.DeserializeObject<Task>(File.ReadAllText("policies.json"));
-            Console.WriteLine("Executing task: " + task.Name);
+            // Remove non-ASCII?
+            if (task.CullNonAscii)
+            {
+                Console.WriteLine("Removing passwords containing non-ASCII characters...");
+                var startCount = passwords.Count();
+                passwords = passwords.Where(x => x.All(c => c >= 0 || c <= 127)).ToArray();
+                Console.WriteLine("Removed " + (startCount - passwords.Count()) + " passwords.");
+            }
+
+            // Remove non-printable ASCII?
+            if (task.CullNonPrintable)
+            {
+                Console.WriteLine("Removing passwords containing non-printable ASCII characters...");
+                var startCount = passwords.Count();
+                passwords = passwords.Where(x => x.All(c => c >= 32 || c <= 126)).ToArray();
+                Console.WriteLine("Removed " + (startCount - passwords.Count()) + " passwords.");
+            }
 
             // Filter on policies.
             foreach (var policy in task.Policies)
@@ -71,7 +134,16 @@ namespace Ampasamp
                 }
 
                 // Output compliant passwords to file.
-                File.WriteAllText(policy.Name + ".txt", Serialize(filtered.Take(task.Sample), task.OutputJson));
+                File.WriteAllText(policy.Name + ".txt", Serialize(task, policy, filtered.Take(task.Sample), task.Output));
+            }
+        }
+
+        static void Main(string[] args)
+        {
+            var sampleOptions = new SampleOptions();
+            if (CommandLine.Parser.Default.ParseArguments(args, sampleOptions))
+            {
+                Sample(sampleOptions.Database, sampleOptions.Task);
             }
         }
     }
