@@ -1,13 +1,11 @@
 ﻿using CommandLine;
 using CommandLine.Text;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ampasamp
 {
+    /// <summary>
+    /// Represents the command-line options for the program.
+    /// </summary>
     internal class SampleOptions
     {
         [Option('d', "database", Required = true,
