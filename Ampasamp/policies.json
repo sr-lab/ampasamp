@@ -1,0 +1,97 @@
+﻿{
+  "name": "Experiment 1",
+  "sample": 1000,
+  "outputJson": false,
+  "policies": [
+    {
+      "name": "basic8",
+      "length": 8,
+      "uppers": 0,
+      "lowers": 0,
+      "digits": 0,
+      "others": 0,
+      "classes": 0,
+      "words": 0
+    },
+    {
+      "name": "basic12",
+      "length": 12,
+      "uppers": 0,
+      "lowers": 0,
+      "digits": 0,
+      "others": 0,
+      "classes": 0,
+      "words": 0
+    },
+    {
+      "name": "basic16",
+      "length": 16,
+      "uppers": 0,
+      "lowers": 0,
+      "digits": 0,
+      "others": 0,
+      "classes": 0,
+      "words": 0
+    },
+    {
+      "name": "basic20",
+      "length": 20,
+      "uppers": 0,
+      "lowers": 0,
+      "digits": 0,
+      "others": 0,
+      "classes": 0,
+      "words": 0
+    },
+    {
+      "name": "comp8",
+      "length": 8,
+      "uppers": 1,
+      "lowers": 1,
+      "digits": 1,
+      "others": 1,
+      "classes": 0,
+      "words": 0
+    },
+    {
+      "name": "3class12",
+      "length": 12,
+      "uppers": 0,
+      "lowers": 0,
+      "digits": 0,
+      "others": 0,
+      "classes": 3,
+      "words": 0
+    },
+    {
+      "name": "3class16",
+      "length": 16,
+      "uppers": 0,
+      "lowers": 0,
+      "digits": 0,
+      "others": 0,
+      "classes": 0,
+      "words": 0
+    },
+    {
+      "name": "2word12",
+      "length": 12,
+      "uppers": 0,
+      "lowers": 0,
+      "digits": 0,
+      "others": 0,
+      "classes": 0,
+      "words": 2
+    },
+    {
+      "name": "2word16",
+      "length": 16,
+      "uppers": 0,
+      "lowers": 0,
+      "digits": 0,
+      "others": 0,
+      "classes": 0,
+      "words": 2
+    }
+  ]
+}
