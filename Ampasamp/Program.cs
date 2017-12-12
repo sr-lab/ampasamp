@@ -134,12 +134,12 @@ namespace Ampasamp
             var task = JsonConvert.DeserializeObject<Task>(File.ReadAllText(taskFilename));
             Console.WriteLine("Executing task: " + task.Name);
 
-            // Read, parse, randomize full password database.
+            // Read, parse, deduplicate full password database.
             var rnd = new Random();
             var passwords = File.ReadAllText(databaseFilename)
                 .Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None)
                 .Select(x => x.Trim())
-                .OrderBy(x => rnd.Next()).ToArray();
+                .Distinct();
 
             // Remove non-ASCII?
             if (task.CullNonAscii)
@@ -162,6 +162,11 @@ namespace Ampasamp
             // Filter on policies.
             foreach (var policy in task.Policies)
             {
+                Console.WriteLine("Randomizing...");
+
+                // Randomize.
+                passwords = passwords.OrderBy(x => rnd.Next()).ToArray();
+
                 Console.WriteLine("Filtering on policy " + policy.Name + "...");
 
                 // Check if we have enough passwords to sample.
