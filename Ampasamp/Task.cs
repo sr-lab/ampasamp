@@ -31,6 +31,21 @@
         public bool CullNonPrintable { get; set; }
 
         /// <summary>
+        /// Gets or sets whether or not to initially randomize the data before collecting any samples.
+        /// </summary>
+        public bool RandomizeInitial { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether or not to randomize the data before collecting each samples.
+        /// </summary>
+        public bool RandomizeEachSample { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether or not to deduplicate the database before sampling.
+        /// </summary>
+        public bool Deduplicate { get; set; }
+
+        /// <summary>
         /// The set of policies to be used to sample data for this task.
         /// </summary>
         public Policy[] Policies { get; set; }

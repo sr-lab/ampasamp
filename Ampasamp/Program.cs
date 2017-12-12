@@ -135,11 +135,26 @@ namespace Ampasamp
             Console.WriteLine("Executing task: " + task.Name);
 
             // Read, parse, deduplicate full password database.
-            var rnd = new Random();
             var passwords = File.ReadAllText(databaseFilename)
                 .Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None)
-                .Select(x => x.Trim())
-                .Distinct();
+                .Select(x => x.Trim());
+
+            // Randomize if required.
+            var rnd = new Random();
+            if (task.RandomizeInitial)
+            {
+                Console.WriteLine("Performing initial randomization...");
+                passwords = passwords.OrderBy(x => rnd.Next()).ToArray();
+            }
+
+            // Deduplicate if required.
+            var withDuplicates = passwords.Count();
+            if (task.Deduplicate)
+            {
+                Console.WriteLine("Deduplicating database...");
+                passwords = passwords.Distinct();
+                Console.WriteLine("Removed " + (withDuplicates - passwords.Count()) + " passwords.");
+            }
 
             // Remove non-ASCII?
             if (task.CullNonAscii)
@@ -162,10 +177,12 @@ namespace Ampasamp
             // Filter on policies.
             foreach (var policy in task.Policies)
             {
-                Console.WriteLine("Randomizing...");
-
-                // Randomize.
-                passwords = passwords.OrderBy(x => rnd.Next()).ToArray();
+                // Randomize on each sample if required.
+                if (task.RandomizeEachSample)
+                {
+                    Console.WriteLine("Randomizing...");
+                    passwords = passwords.OrderBy(x => rnd.Next()).ToArray();
+                }
 
                 Console.WriteLine("Filtering on policy " + policy.Name + "...");
 
