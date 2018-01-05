@@ -45,5 +45,10 @@
         /// </summary>
         /// <remarks>A 'word' is defined to be a letter string delimited by non-letter characters.</remarks>
         public int Words { get; set; }
+
+        /// <summary>
+        /// Gets or sets the file path of the dictionary to use for the dictionary check.
+        /// </summary>
+        public string Dictionary { get; set; }
     }
 }

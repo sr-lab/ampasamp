@@ -3,11 +3,64 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace Ampasamp
 {
     class Program
     {
+        /// <summary>
+        /// The dictionary cache.
+        /// </summary>
+        private static Dictionary<string, IEnumerable<string>> DictionaryCache = new Dictionary<string, IEnumerable<string>>();
+
+        /// <summary>
+        /// Reads a file as lines, returning it as an array of strings.
+        /// </summary>
+        /// <param name="filename">The filename of the file to read.</param>
+        /// <returns></returns>
+        private static IEnumerable<string> ReadFileAsLines(string filename)
+        {
+            return File.ReadAllText(filename)
+                .Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None)
+                .Select(x => x.Trim());
+        }
+
+        /// <summary>
+        /// Loads the dictionary at a specified file path.
+        /// </summary>
+        /// <param name="filepath"></param>
+        /// <returns></returns>
+        private static IEnumerable<string> LoadDictionary(string filepath)
+        {
+            // Cache if not cached already.
+            if (!DictionaryCache.ContainsKey(filepath))
+            {
+                DictionaryCache[filepath] = ReadFileAsLines(filepath);
+            }
+
+            // Return dictionary.
+            return DictionaryCache[filepath];
+        }
+
+        /// <summary>
+        /// String all non-letter characters from a string.
+        /// </summary>
+        /// <param name="original">The original string.</param>
+        /// <returns></returns>
+        private static string StripNonLetters(string original)
+        {
+            var sb = new StringBuilder();
+            foreach (var c in original)
+            {
+                if (char.IsLetter(c))
+                {
+                    sb.Append(c);
+                }
+            }
+            return sb.ToString();
+        }
+
         /// <summary>
         /// Returns true if a string complies with a policy, otherwise returns false.
         /// </summary>
@@ -24,6 +77,16 @@ namespace Ampasamp
             result = result && (str.CountDigits() >= policy.Digits);
             result = result && (str.CountOthers() >= policy.Others);
             result = result && (str.CountClasses() >= policy.Classes);
+
+            // Dictionary check.
+            if (policy.Dictionary != null && policy.Dictionary != string.Empty)
+            {
+                var term = StripNonLetters(str).ToLower();
+                if (term != string.Empty)
+                {
+                    result = result && !LoadDictionary(policy.Dictionary).Contains(term);
+                }
+            }
 
             // Password length check.
             result = result && (str.Length >= policy.Length);
@@ -44,7 +107,7 @@ namespace Ampasamp
             string output = "";
             foreach (var chr in str)
             {
-                if (Char.IsLetterOrDigit(chr))
+                if (char.IsLetterOrDigit(chr))
                 {
                     output += chr;
                 }
@@ -135,9 +198,7 @@ namespace Ampasamp
             Console.WriteLine("Executing task: " + task.Name);
 
             // Read, parse, deduplicate full password database.
-            var passwords = File.ReadAllText(databaseFilename)
-                .Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None)
-                .Select(x => x.Trim());
+            var passwords = ReadFileAsLines(databaseFilename);
 
             // Randomize if required.
             var rnd = new Random();
