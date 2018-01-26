@@ -12,7 +12,7 @@ namespace Ampasamp
         /// <summary>
         /// The dictionary cache.
         /// </summary>
-        private static Dictionary<string, IEnumerable<string>> DictionaryCache = new Dictionary<string, IEnumerable<string>>();
+        private static Dictionary<string, SearchTreeNode> DictionaryCache = new Dictionary<string, SearchTreeNode>();
 
         /// <summary>
         /// Reads a file as lines, returning it as an array of strings.
@@ -22,8 +22,7 @@ namespace Ampasamp
         private static IEnumerable<string> ReadFileAsLines(string filename)
         {
             return File.ReadAllText(filename)
-                .Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None)
-                .Select(x => x.Trim());
+                .Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
         }
 
         /// <summary>
@@ -31,12 +30,17 @@ namespace Ampasamp
         /// </summary>
         /// <param name="filepath"></param>
         /// <returns></returns>
-        private static IEnumerable<string> LoadDictionary(string filepath)
+        private static SearchTreeNode LoadDictionary(string filepath)
         {
             // Cache if not cached already.
             if (!DictionaryCache.ContainsKey(filepath))
             {
-                DictionaryCache[filepath] = ReadFileAsLines(filepath);
+                var raw = ReadFileAsLines(filepath);
+                var searchTree = new SearchTreeNode();
+                foreach (var entry in raw) {
+                    searchTree.AddString(entry.ToLower());
+                }
+                DictionaryCache[filepath] = searchTree;
             }
 
             // Return dictionary.
