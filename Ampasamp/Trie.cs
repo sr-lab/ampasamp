@@ -58,19 +58,27 @@ namespace Ampasamp
             child.Insert(term.Substring(1), data);
         }
 
+        /// <summary>
+        /// Returns true if this trie contains the given term, otherwise returns false.
+        /// </summary>
+        /// <param name="term">The search term.</param>
+        /// <returns></returns>
         public bool Contains(string term)
         {
-            if (term == "" && Terminal)
+            // If we've reached the end of the term, we need to be on a terminal node.
+            if (term == "")
             {
-                return true;
+                return Terminal;
             }
 
+            // If we can't go deeper into tree, return false.
             var child = GetChild(term[0]);
             if (child == null)
             {
                 return false;
             }
 
+            // Call down to child node.
             return child.Contains(term.Substring(1));
         }
     }
