@@ -12,7 +12,7 @@ namespace Ampasamp
         /// <summary>
         /// The dictionary cache.
         /// </summary>
-        private static Dictionary<string, SearchTreeNode> DictionaryCache = new Dictionary<string, SearchTreeNode>();
+        private static Dictionary<string, Trie<int>> DictionaryCache = new Dictionary<string, Trie<int>>();
 
         /// <summary>
         /// Reads a file as lines, returning it as an array of strings.
@@ -30,17 +30,19 @@ namespace Ampasamp
         /// </summary>
         /// <param name="filepath"></param>
         /// <returns></returns>
-        private static SearchTreeNode LoadDictionary(string filepath)
+        private static Trie<int> LoadDictionary(string filepath)
         {
             // Cache if not cached already.
             if (!DictionaryCache.ContainsKey(filepath))
             {
+                // Load into trie.
                 var raw = ReadFileAsLines(filepath);
-                var searchTree = new SearchTreeNode();
-                foreach (var entry in raw) {
-                    searchTree.AddString(entry.ToLower());
+                var trie = new Trie<int>();
+                foreach (var entry in raw)
+                {
+                    trie.Insert(entry.ToLower(), 0);
                 }
-                DictionaryCache[filepath] = searchTree;
+                DictionaryCache[filepath] = trie;
             }
 
             // Return dictionary.
