@@ -22,8 +22,7 @@ namespace Ampasamp
         private static IEnumerable<string> ReadFileAsLines(string filename)
         {
             return File.ReadAllText(filename)
-                .Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None)
-                .Select(x => x.Trim());
+                .Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
         }
 
         /// <summary>
@@ -41,7 +40,7 @@ namespace Ampasamp
                 var trie = new Trie<int>();
                 foreach (var entry in raw)
                 {
-                    trie.Insert(entry, 0);
+                    trie.Insert(entry.ToLower(), 0);
                 }
                 DictionaryCache[filepath] = trie;
             }
