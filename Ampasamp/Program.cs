@@ -12,7 +12,7 @@ namespace Ampasamp
         /// <summary>
         /// The dictionary cache.
         /// </summary>
-        private static Dictionary<string, IEnumerable<string>> DictionaryCache = new Dictionary<string, IEnumerable<string>>();
+        private static Dictionary<string, Trie<int>> DictionaryCache = new Dictionary<string, Trie<int>>();
 
         /// <summary>
         /// Reads a file as lines, returning it as an array of strings.
@@ -31,12 +31,19 @@ namespace Ampasamp
         /// </summary>
         /// <param name="filepath"></param>
         /// <returns></returns>
-        private static IEnumerable<string> LoadDictionary(string filepath)
+        private static Trie<int> LoadDictionary(string filepath)
         {
             // Cache if not cached already.
             if (!DictionaryCache.ContainsKey(filepath))
             {
-                DictionaryCache[filepath] = ReadFileAsLines(filepath);
+                // Load into trie.
+                var raw = ReadFileAsLines(filepath);
+                var trie = new Trie<int>();
+                foreach (var entry in raw)
+                {
+                    trie.Insert(entry, 0);
+                }
+                DictionaryCache[filepath] = trie;
             }
 
             // Return dictionary.
