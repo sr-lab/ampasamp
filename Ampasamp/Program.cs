@@ -38,6 +38,11 @@ namespace Ampasamp
             {
                 // Load into trie.
                 var raw = ReadFileAsLines(filepath);
+
+                // Remove comments and completely blank lines.
+                raw = raw.Where(x => x != string.Empty && !x.StartsWith(("#!comment:")));
+
+                // Build trie and cache.
                 var trie = new Trie<int>();
                 foreach (var entry in raw)
                 {
