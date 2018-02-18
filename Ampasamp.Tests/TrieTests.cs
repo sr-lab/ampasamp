@@ -1,8 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Ampasamp;
 
-namespace AmpasampTests
+namespace Ampasamp.Tests
 {
     [TestClass]
     public class TrieTests
