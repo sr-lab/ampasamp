@@ -191,7 +191,7 @@ namespace Ampasamp
             // Check files.
             if (!File.Exists(databaseFilename))
             {
-                Console.WriteLine($"Error: database file '{taskFilename}' does not exist.");
+                Console.WriteLine($"Error: database file '{databaseFilename}' does not exist.");
                 return;
             }
             if (!File.Exists(taskFilename))
