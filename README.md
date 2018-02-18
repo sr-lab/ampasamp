@@ -4,6 +4,36 @@ A minimal password sampler.
 ## Overview
 This C# application will (optionally randomly) sample compliant passwords from a file according to a _task_ specified as a JSON file. Multiple policies can be sampled at once at identical sample sizes. C# is used because I wanted to write this fast and use it from Windows.
 
+## Building
+Build this application like any other Visual Studio 2017 project. Remember, though, that you'll need to target `x64` processors if you want to sample from huge banks
+
+## Usage
+Briefly, use the program like this:
+
+```
+./Ampasamp.exe -t mytask.json -d mypasswordlist.txt
+```
+
+There really aren't that many options to get to grips with.
+
+| Option     | Shorthand | Required? | Description                        |
+|------------|-----------|-----------|------------------------------------|
+| --database | -d        | Yes       | The full password database to use. |
+| --task     | -t        | Yes       | The task file to execute.          |
+| --help     | N/A       | No        | Displays the help screen.          |
+
+Bear in mind that this is going to write a bunch of files to your working directory. If there are any in there with the same name expect them to be overwritten without warning. Names take the following form:
+
+```
+{% task.Name% }_{% policy.Name %}_{% task.Sample %}.{% format.Extension %}
+```
+
+So a policy called `basic16` under a task called `mytask` with a sample size of `1000` with output format `coq` will generate a file called:
+
+```
+mytask_basic16_1000.v
+```
+
 ## Tasks
 Commented for clarity, the task file format looks like this (remove comments before using this, comments aren't valid JSON):
 
