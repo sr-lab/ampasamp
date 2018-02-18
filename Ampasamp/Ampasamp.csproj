@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="Dictionaries\LICENSE.txt" />
     <Content Include="Dictionaries\OpenwallTiny.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
