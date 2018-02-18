@@ -1,3 +1,13 @@
+#!comment: This list has been compiled by Solar Designer of Openwall Project,
+#!comment: http://www.openwall.com/wordlists/
+#!comment:
+#!comment: Input wordlist files:
+#!comment: 10001fr.equ, 366often.mis (mwords.tar.gz) -
+#!comment:  Moby (tm) Words II by Grady Ward
+#!comment: englex-dict.gz - Don Olivier, Harvard School of Public Health
+#!comment: pocket-dic.gz - "pocket dictionary"
+#!comment: special.eng.gz - "Special English", via Rick Harrison
+#!comment: wordset_4k.c - originally from a passphrase generator on sci.crypt
 a
 aardvark
 abaci

@@ -37,6 +37,11 @@ namespace Ampasamp
             {
                 // Load into trie.
                 var raw = ReadFileAsLines(filepath);
+
+                // Remove comments and completely blank lines.
+                raw = raw.Where(x => x != string.Empty && !x.StartsWith(("#!comment:")));
+
+                // Build trie and cache.
                 var trie = new Trie<int>();
                 foreach (var entry in raw)
                 {
@@ -190,7 +195,7 @@ namespace Ampasamp
             // Check files.
             if (!File.Exists(databaseFilename))
             {
-                Console.WriteLine($"Error: database file '{taskFilename}' does not exist.");
+                Console.WriteLine($"Error: database file '{databaseFilename}' does not exist.");
                 return;
             }
             if (!File.Exists(taskFilename))
@@ -203,7 +208,7 @@ namespace Ampasamp
             var task = JsonConvert.DeserializeObject<Task>(File.ReadAllText(taskFilename));
             Console.WriteLine("Executing task: " + task.Name);
 
-            // Read, parse, deduplicate full password database.
+            // Read full passsword database.
             var passwords = ReadFileAsLines(databaseFilename);
 
             // Randomize if required.
