@@ -204,7 +204,7 @@ namespace Ampasamp
             var task = JsonConvert.DeserializeObject<Task>(File.ReadAllText(taskFilename));
             Console.WriteLine("Executing task: " + task.Name);
 
-            // Read, parse, deduplicate full password database.
+            // Read full passsword database.
             var passwords = ReadFileAsLines(databaseFilename);
 
             // Randomize if required.
