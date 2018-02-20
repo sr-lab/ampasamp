@@ -25,7 +25,7 @@ There really aren't that many options to get to grips with.
 Bear in mind that this is going to write a bunch of files to your working directory. If there are any in there with the same name expect them to be overwritten without warning. Names take the following form:
 
 ```
-{% task.Name% }_{% policy.Name %}_{% task.Sample %}.{% format.Extension %}
+{% task.Name %}_{% policy.Name %}_{% task.Sample %}.{% format.Extension %}
 ```
 
 So a policy called `basic16` under a task called `mytask` with a sample size of `1000` with output format `coq` will generate a file called:
