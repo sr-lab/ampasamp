@@ -62,6 +62,11 @@ Commented for clarity, the task file format looks like this (remove comments bef
 }
 ```
 
+## Credits
+For any contributions not recognised below, please open an issue. A maintainer will resolve the issue as soon as possible.
+- Software: Saul Johnson [@lambdacasserole](https://github.com/lambdacasserole)
+- Dictionaries: Alexander Peslyak a.k.a. Solar Designer (see [Licensing](#licensing))
+
 ## Licensing
 Licensed under the MIT license, with the exception of the wordlists under `/Ampasamp/Dictionaries` which have their own license (included, can also be found [here](http://download.openwall.net/pub/wordlists/LICENSE.html)) and [readme](http://download.openwall.net/pub/wordlists/README.html).
 
