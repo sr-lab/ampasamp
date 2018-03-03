@@ -89,7 +89,7 @@ namespace Ampasamp
             result = result && (str.CountOthers() >= policy.Others);
             result = result && (str.CountClasses() >= policy.Classes);
             result = result && (policy.Repetitions == -1 || (str.CountRepetitions() <= policy.Repetitions));
-            result = result && (policy.Repetitions == -1 || (str.CountConsecutives() <= policy.Consecutives));
+            result = result && (policy.Consecutives == -1 || (str.CountConsecutives() <= policy.Consecutives));
 
             // Dictionary check.
             if (policy.Dictionary != null && policy.Dictionary != string.Empty)
