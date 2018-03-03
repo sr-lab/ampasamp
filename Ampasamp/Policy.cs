@@ -49,12 +49,12 @@
         /// <summary>
         /// Gets or sets the maximum number of times a character in a password can be repeated.
         /// </summary>
-        public int Repetitions { get; set; }
+        public int Repetitions { get; set; } = -1;
 
         /// <summary>
         /// Gets or sets the maximum number of times a character in a password can vary from its predecessor by one code point.
         /// </summary>
-        public int Consecutives { get; set; }
+        public int Consecutives { get; set; } = -1;
 
         /// <summary>
         /// Gets or sets the file path of the dictionary to use for the dictionary check.
