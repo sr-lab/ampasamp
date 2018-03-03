@@ -49,11 +49,13 @@
         /// <summary>
         /// Gets or sets the maximum number of times a character in a password can be repeated.
         /// </summary>
+        /// <remarks>The value -1 disables this check.</remarks>
         public int Repetitions { get; set; } = -1;
 
         /// <summary>
         /// Gets or sets the maximum number of times a character in a password can vary from its predecessor by one code point.
         /// </summary>
+        /// <remarks>The value -1 disables this check.</remarks>
         public int Consecutives { get; set; } = -1;
 
         /// <summary>
