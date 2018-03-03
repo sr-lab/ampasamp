@@ -1,18 +1,19 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace Ampasamp
 {
     /// <summary>
     /// Useful extensions to strings to check policy compliance.
     /// </summary>
-    internal static class StringExtensions
+    public static class StringExtensions
     {
         /// <summary>
         /// Returns the number of lowercase characters in a string.
         /// </summary>
         /// <param name="str">The string to examine.</param>
         /// <returns></returns>
-        internal static int CountLowers(this string str)
+        public static int CountLowers(this string str)
         {
             return str.Count(char.IsLower);
         }
@@ -22,7 +23,7 @@ namespace Ampasamp
         /// </summary>
         /// <param name="str">The string to examine.</param>
         /// <returns></returns>
-        internal static int CountUppers(this string str)
+        public static int CountUppers(this string str)
         {
             return str.Count(char.IsUpper);
         }
@@ -32,7 +33,7 @@ namespace Ampasamp
         /// </summary>
         /// <param name="str">The string to examine.</param>
         /// <returns></returns>
-        internal static int CountDigits(this string str)
+        public static int CountDigits(this string str)
         {
             return str.Count(char.IsDigit);
         }
@@ -42,7 +43,7 @@ namespace Ampasamp
         /// </summary>
         /// <param name="str">The string to examine.</param>
         /// <returns></returns>
-        internal static int CountOthers(this string str)
+        public static int CountOthers(this string str)
         {
             return str.Length - str.Count(char.IsLetterOrDigit);
         }
@@ -52,7 +53,7 @@ namespace Ampasamp
         /// </summary>
         /// <param name="str">The string to examine.</param>
         /// <returns></returns>
-        internal static int CountClasses(this string str)
+        public static int CountClasses(this string str)
         {
             var count = 0;
             count += str.CountLowers() > 0 ? 1 : 0;
@@ -68,7 +69,7 @@ namespace Ampasamp
         /// </summary>
         /// <param name="str">The string to examine.</param>
         /// <returns></returns>
-        internal static int CountWords(this string str)
+        public static int CountWords(this string str)
         {
             var count = 0;
             var inWord = false;
@@ -88,6 +89,80 @@ namespace Ampasamp
                 }
             }
             return count;
+        }
+
+        /// <summary>
+        /// Returns the length of the longest repeated character run in the string.
+        /// </summary>
+        /// <param name="str">The string to examine.</param>
+        /// <returns></returns>
+        public static int CountRepetitions(this string str)
+        {
+            // Zero for an empty string.
+            if (str.Length == 0)
+            {
+                return 0;
+            }
+
+            // Keep maximum count.
+            var maxCount = 0;
+
+            // Count character repetitions.
+            var count = 0;
+            var previous = str[0];
+            for (var i = 1; i < str.Length; i++)
+            {
+                if (str[i] == previous)
+                {
+                    count++;
+                }
+                else
+                {
+                    maxCount = Math.Max(maxCount, count);
+                    count = 0;
+                }
+                previous = str[i];
+            }
+            maxCount = Math.Max(maxCount, count); // Don't forget this at end of string.
+
+            return maxCount;
+        }
+
+        /// <summary>
+        /// Returns the length of the longest consecutive character run in the string.
+        /// </summary>
+        /// <param name="str">The string to examine.</param>
+        /// <returns></returns>
+        public static int CountConsecutives(this string str)
+        {
+            // Zero for an empty string.
+            if (str.Length == 0)
+            {
+                return 0;
+            }
+
+            // Keep maximum count.
+            var maxCount = 0;
+
+            // Count character repetitions.
+            var count = 0;
+            var previous = str[0];
+            for (var i = 1; i < str.Length; i++)
+            {
+                if (str[i] + 1 == previous || str[i] - 1 == previous)
+                {
+                    count++;
+                }
+                else
+                {
+                    maxCount = Math.Max(maxCount, count);
+                    count = 0;
+                }
+                previous = str[i];
+            }
+            maxCount = Math.Max(maxCount, count); // Don't forget this at end of string.
+
+            return maxCount;
         }
     }
 }
