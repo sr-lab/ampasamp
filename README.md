@@ -57,6 +57,9 @@ Commented for clarity, the task file format looks like this (remove comments bef
       "others": 0, // The minimum number of non-alphanumeric characters in passwords allowed by the policy.
       "classes": 0, // The minimum number of character classes present in passwords allowed by the policy.
       "words": 0 // The minimum number of words in passwords permitted under the policy.
+	  "Repetitions": -1, // The maximum number of times a character in a password can be repeated.
+	  "Consecutives": -1, // The maximum number of times a character in a password can vary from its predecessor by one code point.
+	  "Dictionary": null // The file path of the dictionary to use for the dictionary check.
     }
   ],
 }
